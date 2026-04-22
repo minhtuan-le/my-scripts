@@ -48,11 +48,12 @@ Write-Host "Total size: $totalMB MB ($totalGB GB)" -ForegroundColor Yellow
 $confirm = Read-Host "Continue? (Y/N)"
 
 if ($confirm -in @("Y","y")) {
+    Write-Host "Deleting..."
     Get-ChildItem -Path $Path -Recurse -File -Filter "*.$Extension" |
         Where-Object { $_.LastWriteTime -lt $cutoff } |
         ForEach-Object {
             # Log before deleting
-            Write-Output "$($_.FullName)"
+            # Write-Output "$($_.FullName)"
             Remove-Item $_.FullName -Force
     }
     Write-Host ""
