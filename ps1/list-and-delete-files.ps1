@@ -1,19 +1,16 @@
-$Path = ""
+$Path = Read-Host "Enter a directory path:"
 
 while (-not (Test-Path $Path -PathType Container)) {
-    $Path = Read-Host "Enter a valid directory path"
 
-    if (-not (Test-Path $Path -PathType Container)) {
-        Write-Host "Invalid directory. Try again." -ForegroundColor Yellow
-    }
+    $Path = Read-Host "Not a correct path. Enter a valid directory path:"
 }
 
-$Extension = Read-Host "Enter file extension (without dot)"
+$Extension = Read-Host "Enter file extension (without dot):"
 
 $Days = 0
 
 while ($Days -le 30) {
-    $Days = Read-Host "Enter number of days (must be > 30)"
+    $Days = Read-Host "Enter number of days (must be > 30):"
     
     # Try convert to integer safely
     if (-not [int]::TryParse($Days, [ref]$null)) {
