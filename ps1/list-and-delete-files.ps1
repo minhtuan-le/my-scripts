@@ -1,15 +1,32 @@
-$Path = Read-Host "Enter directory path"
-$Extension = Read-Host "Enter file extension (without dot)"
-$Days = Read-Host "Enter number of days"
+$Path = ""
 
-if (-not $Path) {
-    $Path = "."
+while (-not (Test-Path $Path -PathType Container)) {
+    $Path = Read-Host "Enter a valid directory path"
+
+    if (-not (Test-Path $Path -PathType Container)) {
+        Write-Host "Invalid directory. Try again." -ForegroundColor Yellow
+    }
 }
 
-# Validate path
-if (-not (Test-Path $Path)) {
-    Write-Host "Directory does not exist: $Path" -ForegroundColor Red
-    exit 1
+$Extension = Read-Host "Enter file extension (without dot)"
+
+$Days = 0
+
+while ($Days -le 30) {
+    $Days = Read-Host "Enter number of days (must be > 30)"
+    
+    # Try convert to integer safely
+    if (-not [int]::TryParse($Days, [ref]$null)) {
+        Write-Host "Please enter a valid number."
+        $Days = 0
+        continue
+    }
+
+    $Days = [int]$Days
+
+    if ($Days -le 30) {
+        Write-Host "Value must be greater than 30. Try again."
+    }
 }
 
 # Calculate cutoff date
@@ -45,17 +62,19 @@ Write-Host ""
 Write-Host "Total files: $($files.Count)" -ForegroundColor Yellow
 Write-Host "Total size: $totalMB MB ($totalGB GB)" -ForegroundColor Yellow
 
-$confirm = Read-Host "Continue? (Y/N)"
+$confirm = Read-Host "Confirm DELETE all the files LISTED above? (Y/N)"
 
 if ($confirm -in @("Y","y")) {
-    Write-Host "Deleting..."
     Get-ChildItem -Path $Path -Recurse -File -Filter "*.$Extension" |
         Where-Object { $_.LastWriteTime -lt $cutoff } |
         ForEach-Object {
             # Log before deleting
-            # Write-Output "$($_.FullName)"
+            Write-Output "$($_.FullName)"
             Remove-Item $_.FullName -Force
     }
+    Write-Host "Remaining Files:"
+    Get-ChildItem -Path $Path -Recurse -File -Filter "*.$Extension"
+
     Write-Host ""
     Write-Host "Done."
 }
