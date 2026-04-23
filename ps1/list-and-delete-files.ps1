@@ -9,8 +9,8 @@ $Extension = Read-Host "Enter file extension (without dot)"
 
 $Days = 0
 
-while ($Days -le 29) {
-    $Days = Read-Host "Enter number of days (must be > 30)"
+while ($Days -le 13) {
+    $Days = Read-Host "Enter number of days (must be >= 14)"
     
     # Try convert to integer safely
     if (-not [int]::TryParse($Days, [ref]$null)) {
@@ -20,10 +20,6 @@ while ($Days -le 29) {
     }
 
     $Days = [int]$Days
-
-    if ($Days -le 30) {
-        Write-Host "Value must be greater than 30. Try again."
-    }
 }
 
 # Calculate cutoff date
