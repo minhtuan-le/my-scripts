@@ -10,7 +10,7 @@ $Extension = Read-Host "Enter file extension (without dot)"
 $Days = 0
 
 while ($Days -le 29) {
-    $Days = Read-Host "Enter number of days (must be >= 30)"
+    $Days = Read-Host "Enter number of days (must be > 30)"
     
     # Try convert to integer safely
     if (-not [int]::TryParse($Days, [ref]$null)) {
@@ -35,9 +35,7 @@ Write-Host ""
 
 # Get files
 $files = Get-ChildItem -Path $Path -Recurse -File -Filter "*.$Extension" |
-    Where-Object { $_.LastWriteTime -lt $cutoff } |
-    Select-Object LastWriteTime, FullName |
-    Format-Table -AutoSize
+    Where-Object { $_.LastWriteTime -lt $cutoff }
 
 if ($files.Count -eq 0) {
     Write-Host "No matching files found." -ForegroundColor Green
