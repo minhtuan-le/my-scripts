@@ -62,11 +62,11 @@ if ($confirm -in @("Y","y")) {
         Where-Object { $_.LastWriteTime -lt $cutoff } |
         ForEach-Object {
             # Log before deleting
-            Write-Output "$($_.FullName)"
+            # Write-Output "$($_.FullName)"
             Remove-Item $_.FullName -Force
     }
-    Write-Host "Remaining Files:"
-    Get-ChildItem -Path $Path -Recurse -File -Filter "*.$Extension"
+    #Write-Host "Remaining Files:"
+    #Get-ChildItem -Path $Path -Recurse -File -Filter "*.$Extension"
 
     Write-Host ""
     Write-Host "Done."
